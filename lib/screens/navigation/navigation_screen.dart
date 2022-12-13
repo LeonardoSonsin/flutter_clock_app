@@ -40,7 +40,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           selectedLabelStyle:
               const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
           unselectedFontSize: 16.0,
-          backgroundColor: Colors.blueGrey[900],
+          backgroundColor: Colors.blueGrey[800],
           fixedColor: Colors.white,
           currentIndex: _selectedIndex,
           onTap: onItemTapped,
@@ -83,7 +83,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         height: 30,
         width: 60,
         decoration: BoxDecoration(
-          color: Colors.blueGrey[800],
+          color: Colors.blueGrey[700],
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: Icon(icon),
