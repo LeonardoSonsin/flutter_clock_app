@@ -31,46 +31,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[900],
-      appBar: myAppBar(),
       body: lap.isEmpty ? centerStopwatchBody() : stopwatchLapsBody(),
       floatingActionButton: floatingActionButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  AppBar myAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: const Text('Stopwatch'),
-      actions: [
-        PopupMenuButton(
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 1,
-              child: Text("Screensaver"),
-            ),
-            const PopupMenuItem(
-              value: 2,
-              child: Text("Settings"),
-            ),
-            const PopupMenuItem(
-              value: 3,
-              child: Text("Send feedback"),
-            ),
-            const PopupMenuItem(
-              value: 4,
-              child: Text("Help"),
-            ),
-          ],
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          offset: const Offset(0, 50),
-          color: Colors.blueGrey[700],
-          elevation: 2,
-        ),
-      ],
     );
   }
 
@@ -136,38 +99,50 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     );
   }
 
-  RichText stopwatchTime() {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(
-            fontSize: _stopwatch.elapsed.inHours > 0
-                ? 40.0
-                : _stopwatch.elapsed.inMinutes >= 10
-                    ? 50.0
-                    : _stopwatch.elapsed.inMinutes > 0
-                        ? 60.0
-                        : _stopwatch.elapsed.inSeconds >= 10
-                            ? 70.0
-                            : 80.0),
-        children: [
-          _stopwatch.elapsed.inHours > 0
-              ? TextSpan(text: _stopwatch.elapsed.toString().substring(0, 2))
-              : const TextSpan(text: ''),
-          _stopwatch.elapsed.inMinutes > 0 && _stopwatch.elapsed.inMinutes < 10
-              ? TextSpan(text: _stopwatch.elapsed.toString().substring(3, 5))
-              : _stopwatch.elapsed.inMinutes >= 10
+  Column stopwatchTime() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        RichText(
+          text: TextSpan(
+            style: TextStyle(
+                fontSize: _stopwatch.elapsed.inHours > 0
+                    ? 60.0
+                    : _stopwatch.elapsed.inMinutes >= 10
+                        ? 70.0
+                        : _stopwatch.elapsed.inMinutes > 0
+                            ? 80.0
+                            : _stopwatch.elapsed.inSeconds >= 10
+                                ? 90.0
+                                : 100.0),
+            children: [
+              _stopwatch.elapsed.inHours > 0
                   ? TextSpan(
-                      text: _stopwatch.elapsed.toString().substring(2, 5))
+                      text: _stopwatch.elapsed.toString().substring(0, 2))
                   : const TextSpan(text: ''),
-          _stopwatch.elapsed.inSeconds >= 10
-              ? TextSpan(text: _stopwatch.elapsed.toString().substring(5, 7))
-              : TextSpan(text: _stopwatch.elapsed.toString().substring(6, 7)),
-          TextSpan(
-            text: ' ${_stopwatch.elapsed.toString().substring(8, 10)}',
-            style: const TextStyle(fontSize: 38.0),
+              _stopwatch.elapsed.inMinutes > 0 &&
+                      _stopwatch.elapsed.inMinutes < 10
+                  ? TextSpan(
+                      text: _stopwatch.elapsed.toString().substring(3, 5))
+                  : _stopwatch.elapsed.inMinutes >= 10
+                      ? TextSpan(
+                          text: _stopwatch.elapsed.toString().substring(2, 5))
+                      : const TextSpan(text: ''),
+              _stopwatch.elapsed.inSeconds >= 10
+                  ? TextSpan(
+                      text: _stopwatch.elapsed.toString().substring(5, 7))
+                  : TextSpan(
+                      text: _stopwatch.elapsed.toString().substring(6, 7)),
+            ],
           ),
-        ],
-      ),
+        ),
+        Text(
+          ' ${_stopwatch.elapsed.toString().substring(8, 10)}',
+          style: const TextStyle(fontSize: 48.0, height: 0.8),
+          textAlign: TextAlign.end,
+        ),
+      ],
     );
   }
 
@@ -195,8 +170,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                   onPressed: () {
                     handleStartStop();
                   },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                   label: _stopwatch.isRunning
                       ? const Icon(Icons.pause_outlined)
                       : const Icon(Icons.play_arrow),
@@ -218,19 +192,48 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
             ? SizedBox(
                 height: 50.0,
                 width: 50.0,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    lap.add(_stopwatch.elapsed.toString().substring(2, 10));
-                    if (listScrollController.hasClients) {
-                      final position =
-                          listScrollController.position.maxScrollExtent + 16.0;
-                      listScrollController.jumpTo(position);
-                    }
+                child: InkWell(
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => myAlertDialog(),
+                    );
                   },
-                  child: const Icon(Icons.timer_outlined),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      lap.add(_stopwatch.elapsed.toString().substring(2, 10));
+                      if (listScrollController.hasClients) {
+                        final position = listScrollController.position.maxScrollExtent + 16.0;
+                        listScrollController.jumpTo(position);
+                      }
+                    },
+                    child: const Icon(Icons.timer_outlined),
+                  ),
                 ),
               )
             : const SizedBox(width: 50.0),
+      ],
+    );
+  }
+
+  AlertDialog myAlertDialog() {
+    return AlertDialog(
+      title: const Text("Remove laps"),
+      content: const Text("Do you really want to clean up your lap list?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("NO"),
+        ),
+        TextButton(
+          onPressed: () {
+            lap.clear();
+            Navigator.of(context).pop();
+          },
+          child: const Text("YES"),
+        ),
       ],
     );
   }

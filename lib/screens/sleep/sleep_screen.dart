@@ -6,44 +6,7 @@ class SleepScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[900],
-      appBar: myAppBar(),
       body: myBody(),
-    );
-  }
-
-  AppBar myAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: const Text('Sleep'),
-      actions: [
-        PopupMenuButton(
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 1,
-              child: Text("Screensaver"),
-            ),
-            const PopupMenuItem(
-              value: 2,
-              child: Text("Settings"),
-            ),
-            const PopupMenuItem(
-              value: 3,
-              child: Text("Send feedback"),
-            ),
-            const PopupMenuItem(
-              value: 4,
-              child: Text("Help"),
-            ),
-          ],
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          offset: const Offset(0, 50),
-          color: Colors.blueGrey[700],
-          elevation: 2,
-        ),
-      ],
     );
   }
 

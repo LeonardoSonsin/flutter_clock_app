@@ -32,6 +32,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: myAppBar(),
       body: _screens[_selectedIndex],
       bottomNavigationBar: SizedBox(
         height: 80,
@@ -40,7 +41,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           selectedLabelStyle:
               const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
           unselectedFontSize: 16.0,
-          backgroundColor: Colors.blueGrey[800],
+          backgroundColor: Colors.grey[900],
           fixedColor: Colors.white,
           currentIndex: _selectedIndex,
           onTap: onItemTapped,
@@ -76,6 +77,62 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
 
+  AppBar myAppBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+        child: Text(titleAppBar()),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: PopupMenuButton(
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 1,
+                child: Text("Screensaver"),
+              ),
+              const PopupMenuItem(
+                value: 2,
+                child: Text("Settings"),
+              ),
+              const PopupMenuItem(
+                value: 3,
+                child: Text("Send feedback"),
+              ),
+              const PopupMenuItem(
+                value: 4,
+                child: Text("Help"),
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            offset: const Offset(0, 50),
+            color: Colors.grey[700],
+            elevation: 2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  titleAppBar() {
+    switch (_selectedIndex) {
+      case 0:
+        return "Alarm";
+      case 1:
+        return "Clock";
+      case 2:
+        return "Timer";
+      case 3:
+        return "Stopwatch";
+      case 4:
+        return "Sleep";
+    }
+  }
+
   Widget selectedIcon(IconData icon) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -83,7 +140,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         height: 30,
         width: 60,
         decoration: BoxDecoration(
-          color: Colors.blueGrey[700],
+          color: Colors.grey[700],
           borderRadius: BorderRadius.circular(50.0),
         ),
         child: Icon(icon),
